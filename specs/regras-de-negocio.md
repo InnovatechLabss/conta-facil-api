@@ -95,7 +95,7 @@ Catálogo único das regras de negócio. Specs e planos referenciam regras pelo 
 
 - **RN-PED-01**: Somente a equipe lança pedidos. O cliente não pede pelo sistema.
 - **RN-PED-02**: Todo item pertence a **uma comanda**, ou é **compartilhado** entre N comandas da mesma sessão de mesa.
-- **RN-PED-03**: Item compartilhado é dividido entre **2 ou mais** comandas da mesma sessão em **partes inteiras** (padrão: 1 parte para cada, ou seja, divisão igual; personalizada: ex.: Ana 2 partes e Bruno 1 parte = 2/3 e 1/3). A cota de cada comanda é `total × partes ÷ soma das partes`, arredondada para baixo em centavos; os centavos restantes vão, um a um, para as comandas com **maior resto fracionário**, com empate resolvido pela ordem de seleção. A soma das cotas é sempre igual ao total do item.
+- **RN-PED-03**: Item compartilhado é dividido entre **2 ou mais** comandas da mesma sessão em **partes inteiras** (padrão: 1 parte para cada, ou seja, divisão igual; personalizada: ex.: Ana 2 partes e Bruno 1 parte = 2/3 e 1/3). A cota de cada comanda é `total × partes ÷ soma das partes`, arredondada para baixo em centavos; os centavos restantes vão, um a um, para as comandas com **maior resto fracionário**, com empate resolvido pela ordem de seleção. A soma das cotas é sempre igual ao total do item. Divisão por valor em reais está fora do MVP (D-09).
 - **RN-PED-04**: O **preço é congelado** no momento do lançamento.
 - **RN-PED-05**: Estados do item: `PENDENTE → EM_PREPARO → PRONTO → ENTREGUE`, ou `CANCELADO`. Itens com destino `NENHUM` nascem `ENTREGUE`.
 - **RN-PED-06**: Item pode ser cancelado por garçom enquanto `PENDENTE`. Após isso, somente caixa/admin, com **motivo obrigatório** e classificação (RN-PED-14).
@@ -108,7 +108,7 @@ Catálogo único das regras de negócio. Specs e planos referenciam regras pelo 
 - **RN-PED-13**: Cada linha tem **quantidade inteira ≥ 1**; total da linha = quantidade × preço unitário congelado. O cancelamento pode ser **parcial** (ex.: cancelar 1 de 3 chopps).
 - **RN-PED-14**: Cancelamento após `PENDENTE` exige motivo e classificação: **`PERDA`** (o produto foi produzido e descartado) ou **`SEM_PERDA`** (não chegou a ser produzido). Perdas aparecem no relatório de fechamento de turno, valoradas pelo preço de venda.
 - **RN-PED-15**: Cancelar um item já enviado à produção gera um aviso de **CANCELAMENTO** no destino (ticket impresso e/ou KDS).
-- **RN-PED-16**: Sem KDS, o item passa a `EM_PREPARO` quando o ticket de produção é **impresso com sucesso**. O garçom pode marcar itens como `ENTREGUE`.
+- **RN-PED-16**: Sem KDS, o item passa a `EM_PREPARO` quando o ticket de produção é **impresso com sucesso**. Garçom, Caixa e Admin podem marcar itens como `ENTREGUE`.
 - **RN-PED-17**: Todo item é enviado à produção **no momento do lançamento**. Não existe "segurar" pedido no MVP (D-08).
 - **RN-PED-18**: Destino de produção sem impressora e sem KDS configurados: o lançamento é aceito, o item fica `PENDENTE` e um **alerta** é exibido ao caixa e ao admin (a operação nunca para).
 
@@ -203,3 +203,4 @@ Catálogo único das regras de negócio. Specs e planos referenciam regras pelo 
 | D-06 | App nativo com marca própria nas lojas (App Store/Play Store) por cliente | Fora do MVP. White label no MVP é só visual, em tempo de execução. |
 | D-07 | White label para revendas (agência revende o sistema com a própria marca para vários restaurantes) | **Descartado.** O cliente do SaaS é sempre o estabelecimento; não haverá nível de revenda. |
 | D-08 | "Segurar" itens para enviar à produção depois (ex.: prato principal após a entrada) | Fora do MVP, por risco de erro do usuário (item esquecido sem ir para a cozinha). |
+| D-09 | Dividir item compartilhado por valor em reais (ex.: "Ana paga R$ 70 do vinho") | Fora do MVP. A divisão por partes cobre a maioria dos casos. |

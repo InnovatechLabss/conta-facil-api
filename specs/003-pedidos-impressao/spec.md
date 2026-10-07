@@ -81,7 +81,7 @@ Permitir que a equipe lance pedidos para comandas individuais ou compartilhadas,
 | # | Critério de aceite |
 |---|--------------------|
 | CA5.1 | **Dado** um estabelecimento sem KDS, **quando** o ticket de produção do item é impresso com sucesso, **então** o item passa a `EM_PREPARO`. |
-| CA5.2 | **Dado** um item `EM_PREPARO` ou `PRONTO`, **quando** o garçom o marca como entregue, **então** ele passa a `ENTREGUE`. |
+| CA5.2 | **Dado** um item `EM_PREPARO` ou `PRONTO`, **quando** o garçom, o caixa ou o admin o marca como entregue, **então** ele passa a `ENTREGUE`. |
 | CA5.3 | **Dado** a mesa 5, **quando** o garçom abre o detalhe da mesa, **então** vê cada item, de quem é (ou "compartilhado"), quantidade e status. |
 | CA5.4 | **Dado** que a impressão do ticket falhou, **então** o item continua `PENDENTE` e a mesa mostra um alerta de item não enviado à produção. |
 
@@ -139,8 +139,5 @@ Permitir que a equipe lance pedidos para comandas individuais ou compartilhadas,
 - Divisão de item compartilhado pode ser igual ou personalizada, por partes inteiras (RN-PED-03).
 - Todo item vai à produção na hora; "segurar" pedido fica fora do MVP por risco de erro do usuário (RN-PED-17, D-08).
 - Cancelamento após o preparo exige motivo e classificação `PERDA`/`SEM_PERDA`; perdas entram no relatório do turno (RN-PED-14).
-
-## Perguntas em aberto
-
-1. **Divisão por valor:** além de partes (2/3 e 1/3), permitir dividir por valor em reais (ex.: Ana paga R$ 70 do vinho e Bruno o resto)? (proposta: não no MVP; partes cobrem a maioria dos casos)
-2. **Quem marca entregue:** além do garçom, o caixa pode marcar itens como entregues? (proposta: sim, Garçom, Caixa e Admin)
+- Divisão por valor em reais fica fora do MVP (D-09).
+- Garçom, Caixa e Admin podem marcar itens como entregues (RN-PED-16).
