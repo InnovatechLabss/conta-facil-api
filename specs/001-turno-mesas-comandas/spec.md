@@ -20,7 +20,7 @@ Permitir que a equipe abra o turno de operação, ocupe mesas e crie uma comanda
 
 ## Histórias de usuário
 
-### H1 — Abrir turno
+### H1 — Abrir turno `CF-13`
 **Como** caixa, **quero** abrir o turno informando o fundo de troco, **para** iniciar a operação do dia.
 
 | # | Critério de aceite |
@@ -32,7 +32,7 @@ Permitir que a equipe abra o turno de operação, ocupe mesas e crie uma comanda
 | CA1.5 | **Dado** que a licença em cache do Hub expirou (RN-OFF-09), **quando** o caixa tenta abrir turno, **então** a operação é rejeitada com `LICENCA_EXPIRADA`. |
 | CA1.6 | **Dado** um usuário com papel Garçom, **quando** ele tenta abrir o turno, **então** é rejeitado com `SEM_PERMISSAO` (RN-TUR-09). |
 
-### H2 — Abrir mesa com comandas
+### H2 — Abrir mesa com comandas `CF-14`
 **Como** garçom, **quero** abrir uma mesa e criar as comandas das pessoas sentadas, **para** começar o atendimento.
 
 | # | Critério de aceite |
@@ -44,7 +44,7 @@ Permitir que a equipe abra o turno de operação, ocupe mesas e crie uma comanda
 | CA2.5 | **Dado** que a mesa está desativada, **quando** o garçom tenta abri-la, **então** é rejeitado com `MESA_INATIVA`. |
 | CA2.6 | **Dado** que dois garçons abrem a mesma mesa quase ao mesmo tempo, um deles com o aparelho offline, **quando** os eventos chegam ao Hub, **então** o primeiro aceito vence e o segundo garçom recebe `MESA_OCUPADA` (RN-OFF-06). |
 
-### H3 — Adicionar comanda a uma mesa ocupada
+### H3 — Adicionar comanda a uma mesa ocupada `CF-15`
 **Como** garçom, **quero** adicionar uma comanda quando chega mais alguém, **para** que essa pessoa tenha sua própria conta.
 
 | # | Critério de aceite |
@@ -53,7 +53,7 @@ Permitir que a equipe abra o turno de operação, ocupe mesas e crie uma comanda
 | CA3.2 | **Dado** mesa 5 com "Ana", **quando** o garçom tenta adicionar outra "Ana", **então** é rejeitado com `NOME_COMANDA_DUPLICADO`. |
 | CA3.3 | **Dado** mesa 5 `EM_FECHAMENTO`, **quando** o garçom adiciona uma comanda, **então** a comanda é criada e a mesa volta a `OCUPADA`. |
 
-### H4 — Solicitar fechamento de comanda
+### H4 — Solicitar fechamento de comanda `CF-16`
 **Como** garçom, **quero** marcar que uma pessoa pediu a conta, **para** impedir novos lançamentos nela.
 
 | # | Critério de aceite |
@@ -63,7 +63,7 @@ Permitir que a equipe abra o turno de operação, ocupe mesas e crie uma comanda
 | CA4.3 | **Dado** comanda em `FECHAMENTO_SOLICITADO` com pagamento parcial registrado, **quando** o garçom tenta reabrir, **então** é rejeitado com `COMANDA_COM_PAGAMENTO`. |
 | CA4.4 | **Dado** que a pré-conta consolidada da mesa é solicitada, **então** a mesa passa a `EM_FECHAMENTO`. |
 
-### H5 — Cancelar comanda
+### H5 — Cancelar comanda `CF-17`
 **Como** garçom, **quero** cancelar uma comanda criada por engano, **para** manter a mesa correta.
 
 | # | Critério de aceite |
@@ -71,7 +71,7 @@ Permitir que a equipe abra o turno de operação, ocupe mesas e crie uma comanda
 | CA5.1 | **Dado** comanda "Bruno" sem itens ativos, **quando** o garçom a cancela, **então** ela passa a `CANCELADA` com autor e data/hora registrados. |
 | CA5.2 | **Dado** comanda "Bruno" com itens ativos, **quando** o garçom tenta cancelar, **então** é rejeitado com `COMANDA_COM_ITENS`. |
 
-### H6 — Transferir comanda para outra mesa
+### H6 — Transferir comanda para outra mesa `CF-18`
 **Como** garçom, **quero** mover a comanda de uma pessoa que trocou de mesa, **para** que a conta a acompanhe.
 
 | # | Critério de aceite |
@@ -82,13 +82,13 @@ Permitir que a equipe abra o turno de operação, ocupe mesas e crie uma comanda
 | CA6.4 | **Dado** que "Ana" era a única comanda não encerrada da mesa 5, **quando** é transferida, **então** a sessão da mesa 5 é encerrada e a mesa volta a `LIVRE`. |
 | CA6.5 | **Dado** que "Ana" divide um item com "Bruno" (mesa 5), **quando** "Ana" é transferida, **então** a divisão do item é mantida. |
 
-### H7 — Liberar mesa automaticamente
+### H7 — Liberar mesa automaticamente `CF-19`
 | # | Critério de aceite |
 |---|--------------------|
 | CA7.1 | **Dado** mesa 5 com "Ana" `PAGA` e "Bruno" `FECHAMENTO_SOLICITADO`, **quando** "Bruno" é paga, **então** a sessão é encerrada e a mesa volta a `LIVRE`. |
 | CA7.2 | **Dado** mesa 5 com "Ana" `PAGA` e "Bruno" `CANCELADA`, **então** a mesa volta a `LIVRE`. |
 
-### H8 — Fechar turno
+### H8 — Fechar turno `CF-20`
 **Como** caixa, **quero** fechar o turno conferindo o dinheiro, **para** encerrar o caixa do dia.
 
 | # | Critério de aceite |
@@ -100,7 +100,7 @@ Permitir que a equipe abra o turno de operação, ocupe mesas e crie uma comanda
 | CA8.5 | **Dado** turno aberto às 19h do dia 10 e fechado às 2h do dia 11, **então** o turno pertence ao dia 10. |
 | CA8.6 | **Dado** um usuário com papel Garçom, **quando** ele tenta fechar o turno, **então** é rejeitado com `SEM_PERMISSAO` (RN-TUR-09). |
 
-### H9 — Visualizar mapa de mesas
+### H9 — Visualizar mapa de mesas `CF-21`
 **Como** garçom, **quero** ver todas as mesas e seus estados, **para** saber onde atender.
 
 | # | Critério de aceite |
