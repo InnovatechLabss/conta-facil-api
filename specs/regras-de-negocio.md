@@ -43,6 +43,7 @@ Catálogo único das regras de negócio. Specs e planos referenciam regras pelo 
 - **RN-TUR-06**: Pagamentos Pix `AGUARDANDO_CONFIRMACAO` não impedem o fechamento, mas são listados como pendências do turno.
 - **RN-TUR-07**: Turno pode atravessar a meia-noite; ele pertence à data de abertura.
 - **RN-TUR-08**: Abertura e fechamento de turno funcionam offline.
+- **RN-TUR-09**: Somente **Caixa** e **Admin** podem abrir e fechar turno.
 
 ## RN-MES — Mesa
 
@@ -53,6 +54,7 @@ Catálogo único das regras de negócio. Specs e planos referenciam regras pelo 
 - **RN-MES-05**: A mesa volta a `LIVRE` (sessão encerrada) somente quando todas as comandas da sessão estão `PAGA` ou `CANCELADA`.
 - **RN-MES-06**: Uma mesa desativada pelo admin não pode ser aberta, mas mantém histórico.
 - **RN-MES-07**: Juntar mesas está **fora do MVP**.
+- **RN-MES-08**: A **capacidade** (número de lugares) é um campo **opcional**, configurado pelo estabelecimento por mesa. Quando informada, é exibida no mapa de mesas junto com a quantidade de comandas. Exceder a capacidade **não bloqueia** a abertura de comandas; apenas sinaliza a mesa como acima da capacidade.
 
 ## RN-COM — Comanda
 

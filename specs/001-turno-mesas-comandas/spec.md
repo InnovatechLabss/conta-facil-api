@@ -1,7 +1,8 @@
 # Spec 001 — Turno, Mesas e Comandas
 
 - **Status**: Rascunho
-- **Regras cobertas**: RN-TUR-01..08, RN-MES-01..07, RN-COM-01..09
+- **Regras cobertas**: RN-TUR-01..09, RN-MES-01..08, RN-COM-01..09
+- **Epic Jira**: CF-5
 - **Depende de**: 008 (Estabelecimento, equipe e permissões) para autenticação e papéis
 
 ## Objetivo
@@ -29,6 +30,7 @@ Permitir que a equipe abra o turno de operação, ocupe mesas e crie uma comanda
 | CA1.3 | **Dado** que o fundo de troco não é informado, **quando** o turno é aberto, **então** o fundo é registrado como R$ 0,00. |
 | CA1.4 | **Dado** que o Hub está sem internet, **quando** o caixa abre o turno, **então** o turno é aberto normalmente e o evento fica pendente de sincronização. |
 | CA1.5 | **Dado** que a licença em cache do Hub expirou (RN-OFF-09), **quando** o caixa tenta abrir turno, **então** a operação é rejeitada com `LICENCA_EXPIRADA`. |
+| CA1.6 | **Dado** um usuário com papel Garçom, **quando** ele tenta abrir o turno, **então** é rejeitado com `SEM_PERMISSAO` (RN-TUR-09). |
 
 ### H2 — Abrir mesa com comandas
 **Como** garçom, **quero** abrir uma mesa e criar as comandas das pessoas sentadas, **para** começar o atendimento.
@@ -96,6 +98,7 @@ Permitir que a equipe abra o turno de operação, ocupe mesas e crie uma comanda
 | CA8.3 | **Dado** pagamentos Pix `AGUARDANDO_CONFIRMACAO`, **quando** o turno é fechado, **então** o fechamento é permitido e esses pagamentos aparecem como pendências no relatório. |
 | CA8.4 | **Dado** turno fechado, **então** o relatório de fechamento é enviado para impressão (RN-IMP-03). |
 | CA8.5 | **Dado** turno aberto às 19h do dia 10 e fechado às 2h do dia 11, **então** o turno pertence ao dia 10. |
+| CA8.6 | **Dado** um usuário com papel Garçom, **quando** ele tenta fechar o turno, **então** é rejeitado com `SEM_PERMISSAO` (RN-TUR-09). |
 
 ### H9 — Visualizar mapa de mesas
 **Como** garçom, **quero** ver todas as mesas e seus estados, **para** saber onde atender.
@@ -104,6 +107,9 @@ Permitir que a equipe abra o turno de operação, ocupe mesas e crie uma comanda
 |---|--------------------|
 | CA9.1 | **Dado** turno aberto, **quando** o garçom abre o mapa, **então** vê cada mesa ativa com estado (`LIVRE`, `OCUPADA`, `EM_FECHAMENTO`), quantidade de comandas e tempo de ocupação. |
 | CA9.2 | **Dado** alteração em uma mesa feita por outro aparelho, **então** o mapa é atualizado em tempo real via Hub. |
+| CA9.3 | **Dado** mesa 5 com capacidade 4 e 3 comandas abertas, **quando** o garçom vê o mapa, **então** a mesa exibe "3/4". |
+| CA9.4 | **Dado** mesa 5 com capacidade 4 e 4 comandas, **quando** o garçom adiciona a 5ª comanda, **então** a comanda é criada e a mesa é sinalizada como acima da capacidade (RN-MES-08). |
+| CA9.5 | **Dado** mesa sem capacidade cadastrada, **então** o mapa exibe apenas a quantidade de comandas. |
 
 ---
 
@@ -115,9 +121,9 @@ Permitir que a equipe abra o turno de operação, ocupe mesas e crie uma comanda
 
 ## Erros de domínio
 
-`TURNO_JA_ABERTO`, `TURNO_FECHADO`, `LICENCA_EXPIRADA`, `MESA_OCUPADA`, `MESA_INATIVA`, `COMANDA_OBRIGATORIA`, `NOME_COMANDA_DUPLICADO`, `COMANDA_COM_PAGAMENTO`, `COMANDA_COM_ITENS`, `COMANDAS_ABERTAS`
+`TURNO_JA_ABERTO`, `TURNO_FECHADO`, `LICENCA_EXPIRADA`, `MESA_OCUPADA`, `MESA_INATIVA`, `COMANDA_OBRIGATORIA`, `NOME_COMANDA_DUPLICADO`, `COMANDA_COM_PAGAMENTO`, `COMANDA_COM_ITENS`, `COMANDAS_ABERTAS`, `SEM_PERMISSAO`
 
-## Perguntas em aberto
+## Decisões registradas
 
-- Garçom pode fechar turno ou apenas caixa/admin? (proposta: apenas caixa/admin)
-- Mesa deve ter capacidade (nº de lugares) cadastrada? (proposta: opcional, apenas informativa)
+- Somente Caixa e Admin abrem e fecham turno (RN-TUR-09).
+- Capacidade da mesa é opcional, configurada pelo estabelecimento, e não bloqueia (RN-MES-08).
