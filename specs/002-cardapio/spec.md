@@ -1,19 +1,19 @@
 # Spec 002 — Cardápio
 
 - **Status**: Rascunho
-- **Regras cobertas**: RN-CAR-01..15
+- **Regras cobertas**: RN-CAR-01..20
 - **Epic Jira**: CF-6
 - **Depende de**: 008 (Estabelecimento, equipe e permissões) para papéis; 005 (Hub Local) para a replicação
 
 ## Objetivo
 
-Permitir que o estabelecimento monte e mantenha o cardápio (categorias e produtos) e que a equipe encontre rapidamente os produtos ao lançar pedidos, inclusive sem internet. O cardápio é configuração (fonte da verdade: Nuvem), exceto a disponibilidade, que é operacional e pode mudar no Hub durante o serviço.
+Permitir que o estabelecimento monte e mantenha o cardápio (categorias e produtos), que a equipe encontre rapidamente os produtos ao lançar pedidos, inclusive sem internet, e que o cliente consulte o cardápio no próprio celular. O cardápio é configuração (fonte da verdade: Nuvem), exceto a disponibilidade, que é operacional e pode mudar no Hub durante o serviço.
 
 ## Fora de escopo
 
 - Lançamento de pedidos (spec 003)
 - Adicionais e variações com preço (RN-CAR-06)
-- Cardápio digital para o cliente via QR (ver Perguntas em aberto)
+- Pedidos feitos pelo cliente (o cardápio digital é só leitura)
 - Preços diferentes por horário (happy hour) ou por canal
 
 ---
@@ -73,7 +73,7 @@ Permitir que o estabelecimento monte e mantenha o cardápio (categorias e produt
 
 | # | Critério de aceite |
 |---|--------------------|
-| CA5.1 | **Dado** "Caipirinha de caju" já pedida alguma vez, **quando** o admin tenta excluí-la, **então** é rejeitado com `PRODUTO_JA_PEDIDO`, e o sistema oferece arquivar. |
+| CA5.1 | **Dado** "Caipirinha de caju" já pedida alguma vez, **quando** o admin tenta excluí-la, **então** é rejeitado com `PRODUTO_JA_PEDIDO`, `CARDAPIO_DIGITAL_DESATIVADO`, e o sistema oferece arquivar. |
 | CA5.2 | **Dado** "Caipirinha de caju" já pedida, **quando** o admin a arquiva, **então** ela some do lançamento de pedidos, mas continua nos relatórios e comandas antigas. |
 | CA5.3 | **Dado** "Caipirinha de caju" arquivada, **quando** o admin a restaura, **então** ela volta ao cardápio com os mesmos dados. |
 | CA5.4 | **Dado** "Caipirinha de caju" arquivada e um novo produto ativo com o mesmo nome, **quando** o admin tenta restaurar a arquivada, **então** é rejeitado com `NOME_DUPLICADO`. |
@@ -101,20 +101,44 @@ Permitir que o estabelecimento monte e mantenha o cardápio (categorias e produt
 | CA7.3 | **Dado** que a conexão volta, **quando** o Hub recebe as alterações pendentes, **então** os novos preços valem para os próximos lançamentos, e os itens já lançados mantêm o preço original. |
 | CA7.4 | **Dado** que o Hub está há mais tempo sem sincronizar o cardápio, **então** os aparelhos exibem o aviso "cardápio pode estar desatualizado" com a data da última sincronização. |
 
+### H8 — Consultar cardápio digital (cliente) `CF-29`
+**Como** cliente, **quero** ver o cardápio no meu celular lendo um QR Code, **para** escolher o que pedir ao garçom.
+
+| # | Critério de aceite |
+|---|--------------------|
+| CA8.1 | **Dado** o cardápio digital ativo, **quando** o cliente lê o QR Code, **então** vê categorias ativas e produtos não arquivados, na ordem do admin, com nome, descrição, preço e foto, sem precisar de login. |
+| CA8.2 | **Dado** "Picanha" indisponível, **quando** o cliente vê o cardápio, **então** ela aparece como "indisponível no momento". |
+| CA8.3 | **Dado** um produto arquivado ou de categoria desativada, **quando** o cliente vê o cardápio, **então** ele não aparece. |
+| CA8.4 | **Dado** o cardápio digital, **então** não há nenhuma opção de fazer pedido, e código curto e destino de produção não são exibidos. |
+| CA8.5 | **Dado** que o Hub está sem internet, **quando** o cliente lê o QR Code com a internet do próprio celular, **então** o cardápio abre normalmente, com a disponibilidade da última sincronização. |
+| CA8.6 | **Dado** um estabelecimento no plano Básico ou Pro, **então** o cardápio digital exibe a marca Conta Fácil; no Premium com white label, exibe só a identidade do estabelecimento (RN-WL-03, RN-WL-04). |
+
+### H9 — Disponibilizar o cardápio digital (admin) `CF-30`
+**Como** admin, **quero** obter o QR Code do cardápio digital e poder desativá-lo, **para** colocá-lo nas mesas.
+
+| # | Critério de aceite |
+|---|--------------------|
+| CA9.1 | **Dado** um estabelecimento novo, **então** o cardápio digital já nasce ativo, com link e QR Code próprios. |
+| CA9.2 | **Dado** o painel do admin, **quando** ele baixa o QR Code, **então** recebe uma imagem pronta para impressão com o QR e o nome do estabelecimento. |
+| CA9.3 | **Dado** o cardápio digital ativo, **quando** o admin o desativa, **então** o link passa a exibir uma página de indisponível (`CARDAPIO_DIGITAL_DESATIVADO`). |
+| CA9.4 | **Dado** o cardápio digital desativado, **quando** o admin o reativa, **então** o mesmo link e o mesmo QR voltam a funcionar. |
+| CA9.5 | **Dado** um usuário que não é Admin, **quando** ele tenta desativar o cardápio digital, **então** é rejeitado com `SEM_PERMISSAO`. |
+
 ---
 
 ## Requisitos não funcionais
 
+- **RNF0**: O cardápio digital carrega em até 2 s em conexão móvel 4G e funciona em qualquer navegador de celular, sem instalar app.
 - **RNF1**: A consulta e a busca do cardápio respondem em até 200 ms na rede local, com até 1.000 produtos.
 - **RNF2**: Toda alteração gera evento imutável com autor e data/hora (RN-OFF-02).
 - **RNF3**: Preços sempre em centavos (inteiros); a formatação em reais é feita só na exibição.
 
 ## Erros de domínio
 
-`SEM_PERMISSAO`, `NOME_DUPLICADO`, `CODIGO_DUPLICADO`, `CATEGORIA_OBRIGATORIA`, `CATEGORIA_COM_PRODUTOS`, `DESTINO_OBRIGATORIO`, `PRECO_INVALIDO`, `FOTO_INVALIDA`, `PRODUTO_JA_PEDIDO`
+`SEM_PERMISSAO`, `NOME_DUPLICADO`, `CODIGO_DUPLICADO`, `CATEGORIA_OBRIGATORIA`, `CATEGORIA_COM_PRODUTOS`, `DESTINO_OBRIGATORIO`, `PRECO_INVALIDO`, `FOTO_INVALIDA`, `PRODUTO_JA_PEDIDO`, `CARDAPIO_DIGITAL_DESATIVADO`
 
-## Perguntas em aberto
+## Decisões registradas
 
-1. **Cardápio digital para o cliente (QR na mesa, só para consulta):** o cliente não faz pedidos, mas poder ver o cardápio no celular é o que muitos esperam de um "aplicativo de cardápio" e substitui o cardápio impresso. Incluir no MVP? Em qual plano? (proposta: incluir, só leitura, em todos os planos)
-2. **Disponibilidade:** confirmar quem pode alterar (proposta: Admin, Caixa e Cozinha/Bar; Garçom não).
-3. **Preço zero:** permitir cortesias com preço R$ 0,00? (proposta: sim)
+- Cardápio digital para o cliente (QR, só leitura) entra no MVP, em todos os planos (RN-CAR-16 a 20).
+- Disponibilidade pode ser alterada por Admin, Caixa e Cozinha/Bar; Garçom não (RN-CAR-08).
+- Preço zero é permitido, para cortesias (RN-CAR-13).

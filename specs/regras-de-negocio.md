@@ -85,6 +85,11 @@ Catálogo único das regras de negócio. Specs e planos referenciam regras pelo 
 - **RN-CAR-13**: Preço em centavos, **maior ou igual a zero** (zero permite cortesias). Toda alteração de preço fica registrada no **histórico de preços** (valor anterior, novo, autor, data/hora).
 - **RN-CAR-14**: Produto nunca pedido pode ser **excluído**; produto já pedido só pode ser **arquivado** (RN-CAR-04). Produto arquivado não aparece no lançamento, mas pode ser restaurado.
 - **RN-CAR-15**: Foto opcional (JPG, PNG ou WebP, até 5 MB), redimensionada pela Nuvem. Fotos **não são necessárias para operar**: o Hub guarda apenas miniaturas, e a falta delas não impede lançamentos.
+- **RN-CAR-16**: O estabelecimento tem um **cardápio digital** público, **somente leitura**, acessado pelo cliente via QR Code ou link, sem login. Disponível em **todos os planos**. O cliente **não faz pedidos** por ele (RN-PED-01).
+- **RN-CAR-17**: O cardápio digital exibe categorias ativas e produtos não arquivados, na ordem do admin, com nome, descrição, preço e foto. Produtos indisponíveis aparecem marcados como **"indisponível no momento"**. Código curto e destino de produção não são exibidos.
+- **RN-CAR-18**: O cardápio digital é servido pela **Nuvem** (o cliente usa a própria internet) e reflete a última sincronização com o Hub. Com o Hub offline, a disponibilidade exibida pode estar desatualizada.
+- **RN-CAR-19**: Há **um QR Code por estabelecimento**, que o Admin pode baixar para impressão. A identidade visual segue RN-WL (marca Conta Fácil no Básico e no Pro; white label no Premium).
+- **RN-CAR-20**: O Admin pode **desativar** o cardápio digital; o link passa a exibir uma página de indisponível.
 
 ## RN-PED — Pedidos
 
@@ -148,6 +153,7 @@ Catálogo único das regras de negócio. Specs e planos referenciam regras pelo 
 | Mesas e comandas individuais | ✅ | ✅ | ✅ |
 | Modo offline (Hub Local) | ✅ | ✅ | ✅ |
 | Impressão térmica | ✅ | ✅ | ✅ |
+| Cardápio digital (QR, só leitura) | ✅ | ✅ | ✅ |
 | Pagamento manual (dinheiro/cartão) | ✅ | ✅ | ✅ |
 | Pix integrado | ❌ | ✅ | ✅ |
 | KDS Cozinha | ❌ | ✅ | ✅ |
@@ -182,7 +188,7 @@ Catálogo único das regras de negócio. Specs e planos referenciam regras pelo 
 | D-01 | Emissão de **NFC-e** (nota fiscal) | Fora do MVP. Restaurante emite em sistema próprio. Avaliar como módulo futuro. |
 | D-02 | Provedor Pix concreto | Interface abstrata; escolher depois (Efí, Asaas, Mercado Pago...). |
 | D-03 | Juntar mesas | Fora do MVP. |
-| D-04 | Cliente acompanhar comanda pelo celular (QR) | Fora do MVP. |
+| D-04 | Cliente acompanhar a própria comanda pelo celular (QR) | Fora do MVP. O cardápio digital (só leitura) está no MVP (RN-CAR-16). |
 | D-05 | Integração com Smart POS | Fora do MVP. |
 | D-06 | App nativo com marca própria nas lojas (App Store/Play Store) por cliente | Fora do MVP. White label no MVP é só visual, em tempo de execução. |
 | D-07 | White label para revendas (agência revende o sistema com a própria marca para vários restaurantes) | **Descartado.** O cliente do SaaS é sempre o estabelecimento; não haverá nível de revenda. |
