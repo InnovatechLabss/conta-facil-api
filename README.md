@@ -27,7 +27,7 @@ specs/
 | # | Spec | Epic Jira | Status |
 |---|------|-----------|--------|
 | 001 | Turno, mesas e comandas | CF-5 | Rascunho |
-| 002 | Cardápio | CF-6 | A fazer |
+| 002 | Cardápio | CF-6 | Rascunho |
 | 003 | Pedidos e impressão (ticket de produção) | CF-7 | A fazer |
 | 004 | Fechamento, pagamento e Pix | CF-8 | A fazer |
 | 005 | Hub Local, modo offline e sincronização | CF-9 | A fazer |

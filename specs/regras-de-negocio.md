@@ -76,6 +76,15 @@ Catálogo único das regras de negócio. Specs e planos referenciam regras pelo 
 - **RN-CAR-04**: Produtos não são excluídos fisicamente se já foram pedidos; são arquivados.
 - **RN-CAR-05**: O cardápio é editado na Nuvem e replicado ao Hub quando houver conexão.
 - **RN-CAR-06**: Adicionais/variações com preço estão **fora do MVP**; somente observação livre.
+- **RN-CAR-07**: Somente o **Admin** cria e edita categorias e produtos.
+- **RN-CAR-08**: **Disponibilidade é dado operacional**: pode ser alterada por Admin, Caixa e Cozinha/Bar, inclusive **offline** (via Hub). Se a mesma disponibilidade for alterada no Hub e na Nuvem enquanto estavam desconectados, prevalece a alteração **mais recente**.
+- **RN-CAR-09**: Nome do produto é único dentro do estabelecimento (entre produtos não arquivados). Nome da categoria também.
+- **RN-CAR-10**: Produto pode ter um **código curto** opcional (ex.: `105`), único no estabelecimento, para busca rápida pelo garçom.
+- **RN-CAR-11**: Categorias e produtos têm **ordem de exibição** definida pelo Admin.
+- **RN-CAR-12**: Categoria **desativada** oculta seus produtos no lançamento de pedidos. Categoria só pode ser **excluída** se não tiver produtos (ativos ou arquivados).
+- **RN-CAR-13**: Preço em centavos, **maior ou igual a zero** (zero permite cortesias). Toda alteração de preço fica registrada no **histórico de preços** (valor anterior, novo, autor, data/hora).
+- **RN-CAR-14**: Produto nunca pedido pode ser **excluído**; produto já pedido só pode ser **arquivado** (RN-CAR-04). Produto arquivado não aparece no lançamento, mas pode ser restaurado.
+- **RN-CAR-15**: Foto opcional (JPG, PNG ou WebP, até 5 MB), redimensionada pela Nuvem. Fotos **não são necessárias para operar**: o Hub guarda apenas miniaturas, e a falta delas não impede lançamentos.
 
 ## RN-PED — Pedidos
 
