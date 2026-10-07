@@ -143,9 +143,24 @@ Catálogo único das regras de negócio. Specs e planos referenciam regras pelo 
 | KDS Bar (separado) | ❌ | ❌ | ✅ |
 | Usuários/aparelhos | 3 | 10 | ilimitado |
 | Relatórios | básico | completo | completo + exportação |
+| White label (logo, cores, sem marca do sistema) | ❌ | ✅ | ✅ |
+| Domínio próprio | ❌ | ❌ | ✅ |
 
 - **RN-PLA-03**: Módulos são validados na Nuvem e no Hub (via licença em cache).
 - **RN-PLA-04**: Mudança de plano (upgrade ou downgrade) é aplicada a partir do **próximo turno**, nunca durante um turno aberto.
+
+## RN-WL — Identidade visual e white label
+
+- **RN-WL-01**: White label é um **módulo** de plano (RN-PLA-02), resolvido em tempo de execução por tenant. Não há build nem deploy separado por cliente.
+- **RN-WL-02**: Em **todos os planos**, o nome do estabelecimento aparece nos aparelhos e nos documentos impressos. Isso é identificação, não white label.
+- **RN-WL-03**: Sem o módulo white label (Básico), aplica-se o **tema padrão Conta Fácil** e a marca do sistema fica visível: logo nos aparelhos e rodapé "Powered by Conta Fácil" nos documentos impressos.
+- **RN-WL-04**: Com o módulo white label (Pro e Premium), o estabelecimento configura **logo, cor primária, cor secundária e nome de exibição**, e a marca Conta Fácil é removida de aparelhos e documentos impressos.
+- **RN-WL-05**: Com o módulo de domínio próprio (Premium), o painel web do estabelecimento pode ser acessado por um domínio do cliente (ex.: `gestao.restaurantex.com.br`), com certificado HTTPS emitido pelo sistema. Sem o módulo, o acesso é por subdomínio padrão (ex.: `restaurantex.contafacil.app`).
+- **RN-WL-06**: A identidade visual é **configuração** (fonte da verdade: Nuvem) e é replicada ao Hub com os arquivos (logo) em cache local, para funcionar offline.
+- **RN-WL-07**: Para impressão térmica, o logo é convertido automaticamente em **bitmap monocromático** na largura da impressora (58mm/80mm).
+- **RN-WL-08**: Logo aceito: PNG ou SVG, até 1 MB. Cores com contraste insuficiente para leitura geram **alerta** ao admin, sem bloquear.
+- **RN-WL-09**: Informações obrigatórias **não são afetadas** pelo tema: "NÃO É DOCUMENTO FISCAL" (RN-IMP-08), status de conexão (RN-OFF-08) e textos legais.
+- **RN-WL-10**: No downgrade, o tema padrão volta a valer a partir do próximo turno (RN-PLA-04). A configuração personalizada fica guardada por **90 dias** para ser restaurada em caso de novo upgrade.
 
 ---
 
@@ -158,3 +173,5 @@ Catálogo único das regras de negócio. Specs e planos referenciam regras pelo 
 | D-03 | Juntar mesas | Fora do MVP. |
 | D-04 | Cliente acompanhar comanda pelo celular (QR) | Fora do MVP. |
 | D-05 | Integração com Smart POS | Fora do MVP. |
+| D-06 | App nativo com marca própria nas lojas (App Store/Play Store) por cliente | Fora do MVP. White label no MVP é só visual, em tempo de execução. |
+| D-07 | White label para revendas (agência revende o sistema com a própria marca para vários restaurantes) | Fora do MVP. Exige um nível de tenant acima do estabelecimento. |

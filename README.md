@@ -32,7 +32,7 @@ specs/
 | 004 | Fechamento, pagamento e Pix | A fazer |
 | 005 | Hub Local, modo offline e sincronização | A fazer |
 | 006 | KDS (Cozinha / Bar) | A fazer |
-| 007 | Planos, módulos e licenciamento | A fazer |
+| 007 | Planos, módulos, licenciamento e white label | A fazer |
 | 008 | Estabelecimento, equipe e permissões | A fazer |
 
 ## Stack
