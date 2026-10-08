@@ -136,6 +136,7 @@ Catálogo único das regras de negócio. Specs e planos referenciam regras pelo 
 - **RN-PAG-20**: Sem o módulo Pix integrado (plano Básico), o Pix é registrado **manualmente**, como o cartão: sem QR Code gerado pelo sistema e sem conciliação.
 - **RN-PAG-21**: A pré-conta individual lista itens, cotas de compartilhados (ex.: "1/3 Porção de batata"), subtotal, desconto, taxa de serviço (com aviso de que é opcional), total, já pago e saldo. A pré-conta da mesa mostra o subtotal de cada pessoa e o total da mesa. Imprimir a pré-conta individual coloca a comanda em `FECHAMENTO_SOLICITADO`.
 - **RN-PAG-22**: Comprovante de pagamento é impresso **sob demanda** e mostra forma, valor aplicado, troco (se houver), comandas quitadas e saldo restante.
+- **RN-PAG-23**: Pix recebido com valor **maior** que o saldo: aplica-se o saldo, a comanda fica `PAGA` e o excedente é registrado como **divergência** para o Admin resolver (devolver ou não). Não se cria crédito automático.
 
 ## RN-IMP — Impressão (impressoras térmicas)
 

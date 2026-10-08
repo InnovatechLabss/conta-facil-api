@@ -1,7 +1,7 @@
 # Spec 004 — Fechamento, Pagamento e Pix
 
 - **Status**: Rascunho
-- **Regras cobertas**: RN-PAG-01..22, RN-IMP-03, RN-IMP-05, RN-TUR-05..06
+- **Regras cobertas**: RN-PAG-01..23, RN-IMP-03, RN-IMP-05, RN-TUR-05..06
 - **Epic Jira**: CF-8
 - **Depende de**: 001 (comandas), 003 (itens e cotas), 005 (Hub Local), 007 (módulo Pix), 008 (papéis)
 
@@ -98,7 +98,8 @@ Mesa 5, taxa de serviço 10%:
 | CA6.2 | **Dado** a cobrança gerada, **quando** o provedor confirma o pagamento (webhook), **então** o pagamento é registrado como confirmado, a comanda passa a `PAGA` e o aparelho do garçom é avisado. |
 | CA6.3 | **Dado** uma cobrança pendente há mais de 15 minutos, **então** ela expira, não conta como pagamento e o garçom pode gerar outra. |
 | CA6.4 | **Dado** que o webhook de confirmação chega duas vezes, **então** o pagamento é registrado uma vez só. |
-| CA6.5 | **Dado** uma cobrança gerada para R$ 32,05, **quando** o cliente paga um valor menor, **então** o pagamento é registrado pelo valor efetivamente recebido e o saldo restante continua em aberto. (Pagamento a maior: ver Perguntas em aberto.) |
+| CA6.5 | **Dado** uma cobrança gerada para R$ 32,05, **quando** o cliente paga um valor menor, **então** o pagamento é registrado pelo valor efetivamente recebido e o saldo restante continua em aberto. |
+| CA6.6 | **Dado** uma cobrança de R$ 32,05, **quando** o cliente paga R$ 35,00, **então** é aplicado R$ 32,05, a comanda passa a `PAGA` e os R$ 2,95 excedentes viram divergência para o admin resolver, sem crédito automático (RN-PAG-23). |
 
 ### H7 — Pagar com Pix sem internet e conciliar depois `CF-45`
 **Como** caixa, **quero** receber Pix mesmo com a internet fora do ar, **para** o cliente não ficar preso na mesa.
@@ -156,8 +157,5 @@ Mesa 5, taxa de serviço 10%:
 - Desconto em % ou em reais, só por Caixa e Admin, com motivo, e aparece no relatório do turno (RN-PAG-14).
 - Um pagamento pode quitar várias comandas de uma vez (RN-PAG-06).
 - Qualquer um da equipe pode remover a taxa de serviço a pedido do cliente, com registro (RN-PAG-02).
-
-## Perguntas em aberto
-
-1. **Desconto e taxa:** a taxa de serviço incide sobre o valor **depois** do desconto (proposta, mais justa com o cliente) ou antes?
-2. **Pix com valor diferente (CA6.5):** se o cliente pagar a mais pelo Pix, o excedente vira crédito, é devolvido, ou só é registrado como divergência para o admin resolver? (proposta: divergência para o admin)
+- A taxa de serviço incide sobre o subtotal depois do desconto (RN-PAG-13).
+- Pix pago a mais vira divergência para o admin, sem crédito automático (RN-PAG-23).
