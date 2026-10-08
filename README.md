@@ -30,7 +30,7 @@ specs/
 | 002 | Cardápio | CF-6 | Rascunho |
 | 003 | Pedidos e impressão (ticket de produção) | CF-7 | Rascunho |
 | 004 | Fechamento, pagamento e Pix | CF-8 | Rascunho |
-| 005 | Hub Local, modo offline e sincronização | CF-9 | A fazer |
+| 005 | Hub Local, modo offline e sincronização | CF-9 | Rascunho |
 | 006 | KDS (Cozinha / Bar) | CF-10 | A fazer |
 | 007 | Planos, módulos, licenciamento e white label | CF-11 | A fazer |
 | 008 | Estabelecimento, equipe e permissões | CF-12 | A fazer |

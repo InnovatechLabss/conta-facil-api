@@ -26,7 +26,7 @@ Princípios que guiam todas as specs, planos e implementações. Alterar este do
    📱 Garçom    📱 Garçom    📺 KDS      🖨️ Impressoras térmicas
 ```
 
-- O Hub Local roda em **equipamento do próprio restaurante** (PC do caixa, mini PC ou tablet Android).
+- O Hub Local roda em **equipamento do próprio restaurante**. No MVP, um PC com **Windows 10/11** (em geral o do caixa), como serviço do sistema.
 - Hub e Nuvem compartilham o mesmo código de domínio; o "modo" (local/nuvem) é configuração de deploy.
 - Aparelhos da equipe falam **somente com o Hub** durante a operação.
 - O modo offline está disponível em **todos os planos**.
@@ -48,6 +48,7 @@ Princípios que guiam todas as specs, planos e implementações. Alterar este do
 5. **Conflitos**: vence o primeiro evento aceito pelo Hub; o segundo é rejeitado com motivo e o aparelho é notificado.
 6. **Aparelhos têm fila local**: se o Wi-Fi cair, ações ficam enfileiradas no aparelho e são enviadas ao Hub ao reconectar.
 7. **Status de conexão visível** em todos os aparelhos (online / offline / N eventos pendentes).
+8. **Nada se perde se o Hub morrer**: cada aparelho guarda seus eventos até a Nuvem confirmar o recebimento; um novo Hub se reconstrói a partir da Nuvem e dos aparelhos.
 
 ## 4. Stack e convenções técnicas
 
