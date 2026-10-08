@@ -39,7 +39,7 @@ Catálogo único das regras de negócio. Specs e planos referenciam regras pelo 
 - **RN-TUR-02**: Mesas só podem ser abertas com turno aberto.
 - **RN-TUR-03**: A abertura de turno registra responsável, data/hora e **fundo de troco** (valor inicial em dinheiro, pode ser zero).
 - **RN-TUR-04**: O turno só pode ser fechado quando **não houver comandas abertas** (todas pagas ou canceladas).
-- **RN-TUR-05**: No fechamento, o sistema apresenta o total por forma de pagamento e o **dinheiro esperado** (fundo + recebimentos em dinheiro). O responsável informa o valor contado; a diferença é registrada.
+- **RN-TUR-05**: No fechamento, o sistema apresenta o total por forma de pagamento, descontos, taxas de serviço, perdas e estornos, e o **dinheiro esperado** (fundo + dinheiro aplicado − estornos em dinheiro). O responsável informa o valor contado; a diferença é registrada.
 - **RN-TUR-06**: Pagamentos Pix `AGUARDANDO_CONFIRMACAO` não impedem o fechamento, mas são listados como pendências do turno.
 - **RN-TUR-07**: Turno pode atravessar a meia-noite; ele pertence à data de abertura.
 - **RN-TUR-08**: Abertura e fechamento de turno funcionam offline.
@@ -114,18 +114,28 @@ Catálogo único das regras de negócio. Specs e planos referenciam regras pelo 
 
 ## RN-PAG — Fechamento e pagamento
 
-- **RN-PAG-01**: Total da comanda = itens individuais + cotas de itens compartilhados + taxa de serviço (se aceita).
-- **RN-PAG-02**: A taxa de serviço é **opcional** e pode ser removida por comanda, a pedido do cliente.
-- **RN-PAG-03**: Formas de pagamento no MVP: dinheiro, cartão (registrado manualmente — maquininha externa) e Pix.
+- **RN-PAG-01**: Total da comanda = subtotal (itens individuais + cotas de itens compartilhados) − desconto + taxa de serviço (se mantida). Saldo = total − pagamentos válidos.
+- **RN-PAG-02**: A taxa de serviço é **opcional** e pode ser removida (e restaurada) por comanda, a pedido do cliente, por Garçom, Caixa ou Admin, enquanto a comanda não estiver `PAGA`. Quem removeu fica registrado.
+- **RN-PAG-03**: Formas de pagamento no MVP: dinheiro, cartão (registrado manualmente, maquininha externa, com tipo crédito, débito ou voucher) e Pix.
 - **RN-PAG-04**: Uma comanda aceita **múltiplos pagamentos** (ex.: parte em dinheiro, parte no Pix) até quitar o total.
 - **RN-PAG-05**: Pagamento em dinheiro registra valor recebido e troco.
-- **RN-PAG-06**: Uma pessoa pode pagar a comanda de outra; o pagamento registra a comanda pagadora (quando houver).
+- **RN-PAG-06**: Uma pessoa pode pagar a comanda de outra, ou **várias comandas de uma vez** (pagamento agrupado). O pagamento agrupado quita integralmente as comandas selecionadas do turno; o valor é distribuído pelo saldo de cada uma, e cada comanda registra quem pagou (comanda pagadora, quando houver).
 - **RN-PAG-07**: Pix é acessado via interface abstrata `PaymentProvider`; o provedor concreto será definido depois.
 - **RN-PAG-08**: **Online**: gera Pix dinâmico (cobrança com `txid`); confirmação automática via webhook.
 - **RN-PAG-09**: **Offline**: o Hub gera **Pix estático** (chave + valor + identificador da comanda). O pagamento fica `AGUARDANDO_CONFIRMACAO`.
-- **RN-PAG-10**: Com pagamento `AGUARDANDO_CONFIRMACAO`, o caixa/garçom pode **liberar a comanda** com base no comprovante do cliente; a conciliação ocorre quando a conexão voltar.
+- **RN-PAG-10**: Com pagamento `AGUARDANDO_CONFIRMACAO`, Garçom, Caixa ou Admin pode **liberar a comanda** com base no comprovante do cliente; a conciliação ocorre quando a conexão voltar.
 - **RN-PAG-11**: Pix offline não conciliado em **24h** (configurável) gera alerta de divergência para o admin.
-- **RN-PAG-12**: Estorno de pagamento: somente admin, com motivo; reabre a comanda se o turno ainda estiver aberto.
+- **RN-PAG-12**: Estorno de pagamento: somente Admin, com motivo. Com o turno do pagamento ainda aberto, a comanda volta a `FECHAMENTO_SOLICITADO` com saldo devedor (se a mesa já foi liberada, a comanda aparece nas pendências do caixa, sem reocupar a mesa). Com o turno já fechado, o estorno é apenas financeiro e entra como saída no turno aberto atual. Estorno de Pix integrado solicita a devolução ao provedor; estorno de cartão é feito na maquininha e apenas registrado.
+- **RN-PAG-13**: O percentual da taxa de serviço é **congelado na abertura da comanda**. A taxa incide sobre o subtotal **após o desconto**. Desconto e taxa são arredondados ao centavo mais próximo (meio centavo para cima).
+- **RN-PAG-14**: **Desconto** em % ou em reais, somente por **Caixa e Admin**, com **motivo obrigatório**. Um desconto por comanda (um novo substitui o anterior). O desconto não pode ser maior que o subtotal nem deixar o total abaixo do que já foi pago. Descontos aparecem no relatório do turno.
+- **RN-PAG-15**: Registrar o primeiro pagamento coloca a comanda em `FECHAMENTO_SOLICITADO`, congelando os itens.
+- **RN-PAG-16**: Permissão por forma de pagamento: **dinheiro** somente **Caixa e Admin**; **cartão e Pix**, Garçom, Caixa e Admin.
+- **RN-PAG-17**: Só pagamento em **dinheiro** pode ser maior que o saldo (gera troco). Cartão e Pix são limitados ao saldo. Para o caixa, conta o valor aplicado (recebido − troco).
+- **RN-PAG-18**: A comanda passa a `PAGA` quando os pagamentos confirmados mais os Pix liberados (RN-PAG-10) cobrem o total.
+- **RN-PAG-19**: Cobrança Pix dinâmica expira em **15 minutos** (configurável); expirada, pode-se gerar outra. Cobrança pendente ou expirada não conta como pagamento.
+- **RN-PAG-20**: Sem o módulo Pix integrado (plano Básico), o Pix é registrado **manualmente**, como o cartão: sem QR Code gerado pelo sistema e sem conciliação.
+- **RN-PAG-21**: A pré-conta individual lista itens, cotas de compartilhados (ex.: "1/3 Porção de batata"), subtotal, desconto, taxa de serviço (com aviso de que é opcional), total, já pago e saldo. A pré-conta da mesa mostra o subtotal de cada pessoa e o total da mesa. Imprimir a pré-conta individual coloca a comanda em `FECHAMENTO_SOLICITADO`.
+- **RN-PAG-22**: Comprovante de pagamento é impresso **sob demanda** e mostra forma, valor aplicado, troco (se houver), comandas quitadas e saldo restante.
 
 ## RN-IMP — Impressão (impressoras térmicas)
 
