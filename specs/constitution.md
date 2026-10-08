@@ -31,6 +31,16 @@ Princípios que guiam todas as specs, planos e implementações. Alterar este do
 - Aparelhos da equipe falam **somente com o Hub** durante a operação.
 - O modo offline está disponível em **todos os planos**.
 
+### Aplicações
+
+| Aplicação | Forma | Por quê |
+|-----------|-------|---------|
+| **Hub Local** | **Serviço do Windows** (NestJS + SQLite empacotados), sem janela, com ícone de status na bandeja | Precisa rodar em segundo plano, iniciar com o Windows, receber conexões da rede local, falar com impressoras e gravar dados de forma durável — nada disso é possível no navegador |
+| **Administração do Hub** (ativação, pareamento, impressoras, status) | **Página web local** em `http://localhost`, aberta pelo ícone da bandeja e acessível só na própria máquina | Evita construir interface nativa de Windows; mesma tecnologia web do resto |
+| **Aparelhos da equipe** (garçom, caixa) e **KDS** | **App instalado** (Android e iOS; Capacitor ou React Native, a definir no plano técnico) | Fila offline durável (o navegador pode apagar dados), descoberta do Hub na rede local e conexão segura com o Hub sem certificado público |
+| **Painel do Admin** | **Web**, servido pela Nuvem | Configuração e relatórios; não precisa funcionar offline |
+| **Cardápio digital do cliente** | **Web**, servido pela Nuvem | Sem instalar nada; só leitura |
+
 ### Fontes da verdade
 
 | Dado | Fonte da verdade |

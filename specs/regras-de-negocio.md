@@ -165,7 +165,7 @@ Catálogo único das regras de negócio. Specs e planos referenciam regras pelo 
 - **RN-OFF-09**: O Hub mantém **licença em cache** válida por **7 dias** (configurável) sem contato com a Nuvem. Após o prazo, entra em **modo restrito** (não abre novos turnos), mas **nunca interrompe um turno em andamento**.
 - **RN-OFF-10**: No MVP, o Hub roda em **Windows 10/11 (64 bits)**, instalado por um instalador próprio, como **serviço** que inicia junto com o computador. Linux e Android ficam para depois (D-10).
 - **RN-OFF-11**: **Ativação do Hub**: o Admin gera no painel da Nuvem um **código de ativação** (uso único, válido por 15 minutos) e o informa na instalação. Ativar um novo Hub **desativa o anterior**, que deixa de operar e de sincronizar (RN-EST-03).
-- **RN-OFF-12**: **Pareamento de aparelhos**: o aparelho se conecta ao Hub na rede local lendo um QR Code exibido no Hub. Depois, cada pessoa entra com seu usuário. O **login funciona offline**: o Hub valida com as credenciais sincronizadas da Nuvem. A quantidade de aparelhos respeita o limite do plano (RN-PLA-02).
+- **RN-OFF-12**: **Pareamento de aparelhos**: o aparelho se conecta ao Hub na rede local lendo um QR Code exibido no Hub, que contém o endereço local, um token temporário e a **impressão digital do certificado** do Hub (usada para validar a conexão segura sem certificado público). Depois, cada pessoa entra com seu usuário. O **login funciona offline**: o Hub valida com as credenciais sincronizadas da Nuvem. Um usuário desativado na Nuvem enquanto o Hub está offline continua conseguindo entrar até a próxima sincronização; o Admin pode, a qualquer momento, remover o aparelho direto no Hub. A quantidade de aparelhos respeita o limite do plano (RN-PLA-02).
 - **RN-OFF-13**: Se o endereço do Hub na rede mudar, os aparelhos o **reencontram automaticamente** na rede local, sem novo pareamento.
 - **RN-OFF-14**: **Hub indisponível**: os aparelhos exibem alerta e só aceitam **lançar pedidos**, que ficam na fila do aparelho. Abrir mesa, pagamentos e turno exigem o Hub. Nada é impresso até o Hub voltar.
 - **RN-OFF-15**: Cada aparelho guarda uma **cópia dos eventos que gerou** até receber a confirmação de que eles chegaram à **Nuvem** (não apenas ao Hub).
@@ -174,8 +174,10 @@ Catálogo único das regras de negócio. Specs e planos referenciam regras pelo 
 - **RN-OFF-18**: A sincronização Hub ↔ Nuvem é **contínua** quando há internet, com novas tentativas automáticas. O painel do Admin mostra a última sincronização e a quantidade de eventos pendentes.
 - **RN-OFF-19**: O **Hub é o relógio de referência** da operação: os eventos usam a data/hora do Hub, que se acerta pela internet quando está online.
 - **RN-OFF-20**: A comunicação aparelho ↔ Hub é **autenticada e criptografada**, e o banco de dados do Hub é **criptografado** no disco.
-- **RN-OFF-21**: Com turno aberto e o Hub sem sincronizar há mais de **2 horas** (configurável), o Admin recebe um **alerta** na Nuvem.
+- **RN-OFF-21**: Com turno aberto e o Hub sem sincronizar há mais de **2 horas** (configurável), o Admin recebe um **alerta** no painel da Nuvem e por **e-mail**.
 - **RN-OFF-22**: **Atualizações** do Hub são baixadas automaticamente e só são aplicadas **sem turno aberto**.
+- **RN-OFF-23**: O Hub roda como **serviço do Windows**, sem janela, com um **ícone na bandeja** que mostra o status (online/offline, eventos pendentes, impressoras). A **administração do Hub** (ativação, pareamento, impressoras, status) é uma página web local em `http://localhost`, acessível somente na própria máquina.
+- **RN-OFF-24**: Os aparelhos da equipe (garçom, caixa) e o KDS são **apps instalados** (Android e iOS). Cardápio digital do cliente e painel do Admin são **web**, servidos pela Nuvem.
 
 ## RN-PLA — Planos e módulos
 

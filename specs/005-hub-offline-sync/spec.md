@@ -1,7 +1,7 @@
 # Spec 005 — Hub Local, Modo Offline e Sincronização
 
 - **Status**: Rascunho
-- **Regras cobertas**: RN-OFF-01..22, RN-EST-03
+- **Regras cobertas**: RN-OFF-01..24, RN-EST-03
 - **Epic Jira**: CF-9
 - **Depende de**: 008 (estabelecimento, usuários e papéis), 007 (licença e limites do plano)
 
@@ -31,14 +31,18 @@ Garantir que a operação do restaurante **nunca pare** por falta de internet e 
 | CA1.4 | **Dado** um código expirado ou já usado, **quando** é informado, **então** é rejeitado com `CODIGO_ATIVACAO_INVALIDO`. |
 | CA1.5 | **Dado** um Hub já ativo, **quando** o admin ativa um Hub em outro computador, **então** o anterior é desativado, deixa de operar e de sincronizar, e mostra a mensagem `HUB_DESATIVADO`. |
 | CA1.6 | **Dado** um PC com sistema não suportado, **quando** o instalador é executado, **então** ele informa que o sistema não é suportado e não instala. |
+| CA1.7 | **Dado** o Hub instalado, **então** um ícone na bandeja do Windows mostra o status (online/offline, eventos pendentes, impressoras), e clicar nele abre a administração do Hub no navegador em `http://localhost`. |
+| CA1.8 | **Dado** outro computador da rede, **quando** alguém tenta abrir a administração do Hub pelo endereço da rede, **então** o acesso é recusado (só funciona na própria máquina). |
 
 ### H2 — Conectar aparelhos ao Hub `CF-49`
 **Como** admin, **quero** conectar os celulares e tablets da equipe ao Hub, **para** que trabalhem pela rede local.
 
 | # | Critério de aceite |
 |---|--------------------|
-| CA2.1 | **Dado** o Hub ativo, **quando** o admin abre a tela de pareamento, **então** o Hub exibe um QR Code com o endereço local e um token temporário. |
-| CA2.2 | **Dado** um aparelho na mesma rede, **quando** lê o QR Code, **então** fica pareado com o Hub e passa a exibir a tela de login. |
+| CA2.1 | **Dado** o Hub ativo, **quando** o admin abre a tela de pareamento, **então** o Hub exibe um QR Code com o endereço local, um token temporário e a impressão digital do certificado do Hub. |
+| CA2.2 | **Dado** um aparelho com o app instalado, na mesma rede, **quando** lê o QR Code, **então** fica pareado com o Hub e passa a exibir a tela de login. |
+| CA2.8 | **Dado** um computador na rede se passando pelo Hub, **quando** um aparelho pareado tenta se conectar a ele, **então** a conexão é recusada, porque o certificado não corresponde à impressão digital do pareamento. |
+| CA2.9 | **Dado** que o admin desativou o garçom João na Nuvem com o Hub offline, **quando** João tenta entrar, **então** o login ainda funciona até a próxima sincronização; depois dela, é rejeitado com `CREDENCIAIS_INVALIDAS`. |
 | CA2.3 | **Dado** um aparelho pareado, **quando** o garçom entra com usuário e senha sem internet, **então** o login funciona, validado pelo Hub com as credenciais sincronizadas. |
 | CA2.4 | **Dado** o limite de 3 aparelhos do plano Básico já atingido, **quando** um 4º aparelho tenta parear, **então** é rejeitado com `LIMITE_APARELHOS`. |
 | CA2.5 | **Dado** que o roteador trocou o endereço do Hub, **quando** os aparelhos perdem a conexão, **então** reencontram o Hub automaticamente na rede, sem novo pareamento. |
@@ -66,7 +70,7 @@ Garantir que a operação do restaurante **nunca pare** por falta de internet e 
 | CA4.3 | **Dado** que um lote foi enviado mas a confirmação se perdeu, **quando** o Hub reenvia, **então** a Nuvem não duplica nada (idempotência). |
 | CA4.4 | **Dado** uma falha da Nuvem, **então** o Hub tenta de novo automaticamente, com intervalos crescentes, sem afetar a operação. |
 | CA4.5 | **Dado** o painel do admin, **então** ele mostra a data/hora da última sincronização e quantos eventos estão pendentes. |
-| CA4.6 | **Dado** turno aberto e o Hub sem sincronizar há mais de 2 horas, **então** o admin recebe um alerta na Nuvem. |
+| CA4.6 | **Dado** turno aberto e o Hub sem sincronizar há mais de 2 horas, **então** o admin recebe um alerta no painel da Nuvem e por e-mail. |
 | CA4.7 | **Dado** uma alteração de configuração na Nuvem (ex.: preço), **quando** o Hub está online, **então** ela chega ao Hub e aos aparelhos (RN-OFF-05). |
 
 ### H5 — Resolver conflitos `CF-52`
@@ -140,8 +144,6 @@ Garantir que a operação do restaurante **nunca pare** por falta de internet e 
 - Hub roda em Windows 10/11 no MVP (RN-OFF-10, D-10).
 - Se o Hub cair, os aparelhos enfileiram pedidos e o Hub é recuperado a partir da Nuvem e das cópias dos aparelhos (RN-OFF-14 a 16, D-11).
 - O Hub guarda os últimos 30 dias; o histórico completo fica na Nuvem (RN-OFF-17).
-
-## Perguntas em aberto
-
-1. **Login offline de usuário desativado:** se o admin desativa um funcionário na Nuvem enquanto o Hub está sem internet, ele ainda consegue entrar até o Hub sincronizar. Aceitável no MVP? (proposta: sim; o admin também pode remover o aparelho direto no Hub)
-2. **Alerta de Hub sem sincronizar:** além do painel, enviar o alerta por e-mail ao admin? (proposta: sim, e-mail no MVP)
+- Hub é serviço do Windows com administração via navegador local; aparelhos da equipe e KDS são apps instalados (RN-OFF-23, RN-OFF-24).
+- Usuário desativado com o Hub offline ainda entra até a próxima sincronização (RN-OFF-12).
+- Alerta de Hub sem sincronizar vai para o painel e por e-mail (RN-OFF-21).
